@@ -222,10 +222,11 @@ export default function ChatPage() {
               </div>
               <button
                 type="submit"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-sky-400 text-slate-950 text-sm font-semibold hover:bg-sky-300 transition-colors disabled:opacity-60"
+                aria-label="Send message"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F5EDE0] text-slate-900 text-base font-semibold shadow-[0_10px_30px_rgba(250,235,215,0.5)] hover:bg-[#F1E4D4] transition-colors disabled:opacity-60 disabled:shadow-none appearance-none"
                 disabled={!input.trim() || isLoading}
               >
-                ↩
+                <span className="-mt-[1px]">➤</span>
               </button>
             </div>
             <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
