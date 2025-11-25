@@ -223,10 +223,10 @@ export default function ChatPage() {
               <button
                 type="submit"
                 aria-label="Send message"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F5EDE0] text-slate-900 text-base font-semibold shadow-[0_10px_30px_rgba(250,235,215,0.5)] hover:bg-[#F1E4D4] transition-colors disabled:opacity-60 disabled:shadow-none appearance-none"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F5EDE0] text-slate-900 text-sm font-semibold shadow-[0_12px_32px_rgba(250,235,215,0.5)] hover:bg-[#F1E4D4] transition-colors disabled:opacity-60 disabled:shadow-none"
                 disabled={!input.trim() || isLoading}
               >
-                <span className="-mt-[1px]">➤</span>
+                ↗
               </button>
             </div>
             <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
