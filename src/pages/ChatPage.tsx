@@ -1,6 +1,7 @@
 // src/pages/ChatPage.tsx
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
+import { useTheme } from "../theme";
 
 type ChatMessage = {
   id: number;
@@ -99,6 +100,7 @@ function AssistantBubble({ text }: { text: string }) {
 }
 
 export default function ChatPage() {
+  const { theme, toggle } = useTheme();
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -171,7 +173,7 @@ export default function ChatPage() {
   const hasUserMessage = messages.some((m) => m.role === "user");
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       {/* Background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-[#020618]" />
@@ -180,12 +182,12 @@ export default function ChatPage() {
       </div>
 
       {/* Top bar */}
-      <header className="border-b border-slate-800/80 bg-slate-950/95">
+      <header className="border-b border-slate-200 bg-white/90 dark:border-slate-800/80 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-slate-300 text-sm hover:bg-slate-800 hover:text-slate-50 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-700 text-sm hover:bg-slate-200 hover:text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-50"
             >
               ←
             </Link>
@@ -197,19 +199,32 @@ export default function ChatPage() {
                 <p className="text-sm font-semibold tracking-tight">
                   WanderFlow Concierge
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
                   Trip planning assistant · Beta
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="hidden items-center gap-3 text-[11px] text-slate-400 sm:flex">
-            <span className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-2 py-1 border border-slate-700/80">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Online
-            </span>
-            <span>Plan a weekend, city break, or full trip.</span>
+          <div className="hidden items-center gap-4 sm:flex">
+            <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-slate-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 border border-slate-300 dark:bg-slate-900 dark:border-slate-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                Online
+              </span>
+              <span>Plan a weekend, city break, or full trip.</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={toggle}
+              className="flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors"
+            >
+              <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+              <span className="hidden sm:inline">
+                {theme === "dark" ? "Light" : "Dark"}
+              </span>
+            </button>
           </div>
         </div>
       </header>

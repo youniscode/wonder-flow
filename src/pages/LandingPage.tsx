@@ -1,9 +1,11 @@
 // src/pages/LandingPage.tsx
 import { Link } from "react-router-dom";
+import { useTheme } from "../theme";
 
 export default function LandingPage() {
+  const { theme, toggle } = useTheme();
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-slate-950" />
@@ -13,40 +15,60 @@ export default function LandingPage() {
       </div>
 
       {/* Top nav */}
-      <header className="border-b border-slate-800/80 bg-slate-950/95">
+      <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+          {/* Brand */}
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-cyan-300 text-xs font-semibold text-slate-900">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-cyan-300 text-xs font-semibold text-slate-900 shadow-sm">
               W
             </div>
-            <div>
-              <p className="text-sm font-semibold tracking-tight">WanderFlow</p>
-              <p className="text-[11px] text-slate-400">
+            <div className="leading-tight">
+              <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                WanderFlow
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 AI-powered trip concierge
               </p>
             </div>
           </div>
 
-          <nav className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-            <button className="hover:text-slate-50 transition-colors">
-              How it works
+          {/* Nav + theme toggle */}
+          <div className="hidden items-center gap-4 md:flex">
+            <nav className="flex items-center gap-6 text-sm text-slate-700 dark:text-slate-300">
+              <button className="hover:text-slate-900 dark:hover:text-slate-50 transition-colors">
+                How it works
+              </button>
+              <Link
+                to="/search"
+                className="hover:text-slate-900 dark:hover:text-slate-50 transition-colors"
+              >
+                Categories
+              </Link>
+              <Link
+                to="/admin"
+                className="hover:text-slate-900 dark:hover:text-slate-50 transition-colors"
+              >
+                For hosts
+              </Link>
+              <Link
+                to="/profile"
+                className="rounded-full border border-slate-300 bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors"
+              >
+                Sign in
+              </Link>
+            </nav>
+
+            <button
+              type="button"
+              onClick={toggle}
+              className="flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors"
+            >
+              <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+              <span className="hidden sm:inline">
+                {theme === "dark" ? "Light" : "Dark"}
+              </span>
             </button>
-            <Link
-              to="/search"
-              className="hover:text-slate-50 transition-colors"
-            >
-              Categories
-            </Link>
-            <Link to="/admin" className="hover:text-slate-50 transition-colors">
-              For hosts
-            </Link>
-            <Link
-              to="/profile"
-              className="rounded-full border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs font-semibold text-slate-200 hover:border-sky-400 hover:text-sky-100 transition-colors"
-            >
-              Sign in
-            </Link>
-          </nav>
+          </div>
         </div>
       </header>
 
@@ -61,13 +83,17 @@ export default function LandingPage() {
             </p>
 
             <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="block text-slate-50">Plan less,</span>
-              <span className="block text-sky-300">travel more.</span>
+              <span className="block text-slate-900 dark:text-slate-50">
+                Plan less,
+              </span>
+              <span className="block text-sky-500 dark:text-sky-300">
+                travel more.
+              </span>
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm text-slate-300 sm:text-base">
+            <p className="mt-4 max-w-xl text-sm text-slate-600 sm:text-base dark:text-slate-300">
               WanderFlow is your AI-first trip concierge. Tell it how you feel
-              and what you’re up for — it designs the trip, suggests stays,
+              and what you’re up for it designs the trip, suggests stays,
               finds dinner, and books activities. One flow. One assistant. No
               tab chaos.
             </p>
@@ -99,7 +125,13 @@ export default function LandingPage() {
             <div className="grid gap-3 sm:grid-cols-3">
               {/* Destinations */}
               <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
-                <div className="h-32 bg-gradient-to-tr from-sky-500 via-sky-300 to-amber-200" />
+                <div className="h-32 md:h-40 overflow-hidden">
+                  <img
+                    src="/trips/destinations.png"
+                    alt="Coastal destination view"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/70 to-transparent px-3 pb-3 pt-6">
                   <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-300">
                     Destinations
@@ -112,7 +144,13 @@ export default function LandingPage() {
 
               {/* Hotels */}
               <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
-                <div className="h-32 bg-gradient-to-tr from-amber-300 via-amber-200 to-rose-200" />
+                <div className="h-32 md:h-40 overflow-hidden">
+                  <img
+                    src="/trips/hotel.png"
+                    alt="Warm hotel room interior"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/70 to-transparent px-3 pb-3 pt-6">
                   <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-300">
                     Stays
@@ -125,7 +163,13 @@ export default function LandingPage() {
 
               {/* Experiences */}
               <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
-                <div className="h-32 bg-gradient-to-tr from-indigo-500 via-sky-400 to-emerald-300" />
+                <div className="h-32 md:h-40 overflow-hidden">
+                  <img
+                    src="/trips/experiences.png"
+                    alt="Travel experiences at sunset"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/70 to-transparent px-3 pb-3 pt-6">
                   <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-300">
                     Experiences
