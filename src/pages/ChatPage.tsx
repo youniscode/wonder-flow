@@ -23,6 +23,81 @@ const initialMessages: ChatMessage[] = [
   },
 ];
 
+const KNOWN_TITLES = ["Intro", "Stay", "Food", "Activities", "Tips"];
+
+type TravelSection = {
+  title: string;
+  lines: string[];
+};
+
+function parseTravelSections(text: string): TravelSection[] | null {
+  const rawLines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  if (rawLines.length === 0) return null;
+
+  const sections: TravelSection[] = [];
+  let current: TravelSection | null = null;
+
+  for (const line of rawLines) {
+    const m = line.match(/^(Intro|Stay|Food|Activities|Tips):\s*$/i);
+    if (m) {
+      if (current) sections.push(current);
+      current = { title: m[1], lines: [] };
+    } else if (current) {
+      // strip leading "- " if present
+      current.lines.push(line.replace(/^-+\s*/, ""));
+    } else {
+      // text before the first heading → treat as Intro
+      current = { title: "Intro", lines: [line] };
+    }
+  }
+
+  if (current) sections.push(current);
+
+  const hasKnown = sections.some((s) => KNOWN_TITLES.includes(s.title));
+  return hasKnown ? sections : null;
+}
+
+function AssistantBubble({ text }: { text: string }) {
+  const sections = parseTravelSections(text);
+
+  // Fallback: no structure detected → simple bubble
+  if (!sections) {
+    return (
+      <div className="max-w-[80%] rounded-2xl bg-[#060B17]/95 px-3.5 py-2.5 text-[13px] text-slate-100 leading-relaxed border border-slate-800/90">
+        {text}
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-[80%] rounded-2xl bg-[#060B17]/95 px-3.5 py-2.5 text-[13px] text-slate-100 leading-relaxed border border-slate-800/90 space-y-3">
+      {sections.map((section) => (
+        <div key={section.title} className="space-y-1">
+          {section.title !== "Intro" && (
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+              {section.title}
+            </p>
+          )}
+
+          {section.title === "Intro" ? (
+            <p>{section.lines.join(" ")}</p>
+          ) : (
+            <ul className="list-disc list-inside space-y-0.5">
+              {section.lines.map((line, idx) => (
+                <li key={idx}>{line}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -173,16 +248,13 @@ export default function ChatPage() {
                   m.role === "user" ? "flex justify-end" : "flex justify-start"
                 }
               >
-                <div
-                  className={
-                    m.role === "user"
-                      ? "max-w-[80%] rounded-2xl bg-[#F5EDE0] px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed shadow-[0_16px_40px_rgba(250,235,215,0.35)] border border-[#E4D6C1]"
-                      : "max-w-[80%] rounded-2xl bg-[#060B17]/95 px-3.5 py-2.5 text-[13px] text-slate-100 leading-relaxed border border-slate-800/90"
-                  }
-                  style={{ whiteSpace: "pre-wrap" }}
-                >
-                  {m.content}
-                </div>
+                {m.role === "user" ? (
+                  <div className="max-w-[80%] rounded-2xl bg-[#F5EDE0] px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed shadow-[0_16px_40px_rgba(250,235,215,0.35)] border border-[#E4D6C1]">
+                    {m.content}
+                  </div>
+                ) : (
+                  <AssistantBubble text={m.content} />
+                )}
               </div>
             ))}
 
