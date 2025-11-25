@@ -26,11 +26,13 @@ const initialMessages: ChatMessage[] = [
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = input.trim();
-    if (!trimmed) return;
+    if (!trimmed || isLoading) return;
 
     // Create a user message
     const userMessage: ChatMessage = {
@@ -39,16 +41,58 @@ export default function ChatPage() {
       content: trimmed,
     };
 
-    // Temporary assistant reply (we'll replace this with real AI later)
-    const assistantMessage: ChatMessage = {
-      id: Date.now() + 1,
-      role: "assistant",
-      content:
-        "Got it. In the next step I’ll turn this into a real AI-powered itinerary. For now, this is a placeholder reply.",
-    };
-
-    setMessages((prev) => [...prev, userMessage, assistantMessage]);
+    // Optimistically show the user message
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput("");
+    setIsLoading(true);
+    setErrorText("");
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: newMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to reach concierge API.");
+      }
+
+      const data = await response.json();
+      const replyText: string =
+        (data.reply && typeof data.reply === "string" && data.reply.trim()) ||
+        "I’m here, but I couldn’t generate a proper reply. Please try again.";
+
+      const assistantMessage: ChatMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: replyText,
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (err) {
+      console.error("Chat error:", err);
+      setErrorText("Something went wrong. Please try again in a moment.");
+
+      const assistantErrorMessage: ChatMessage = {
+        id: Date.now() + 2,
+        role: "assistant",
+        content:
+          "I ran into an issue talking to my planning engine. Please try sending your message again in a moment.",
+      };
+
+      setMessages((prev) => [...prev, assistantErrorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const hasUserMessage = messages.some((m) => m.role === "user");
@@ -134,14 +178,16 @@ export default function ChatPage() {
               </div>
             ))}
 
-            {/* Placeholder “typing” bubble */}
+            {/* Typing / status bubble */}
             <div className="flex items-center gap-2 text-[11px] text-slate-500">
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900">
                 …
               </span>
               <span>
-                {hasUserMessage
-                  ? "Concierge is shaping your itinerary based on what you shared."
+                {isLoading
+                  ? "Concierge is crafting your plan…"
+                  : hasUserMessage
+                  ? "Concierge uses what you’ve shared to refine the next suggestions."
                   : "Concierge is ready for your first message."}
               </span>
             </div>
@@ -165,7 +211,7 @@ export default function ChatPage() {
               <button
                 type="submit"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-slate-950 text-sm font-semibold hover:bg-cyan-300 transition-colors disabled:opacity-60"
-                disabled={!input.trim()}
+                disabled={!input.trim() || isLoading}
               >
                 ↩
               </button>
@@ -173,6 +219,9 @@ export default function ChatPage() {
             <p className="mt-1 text-[10px] text-slate-500">
               Your messages are used only to shape the itinerary in this demo.
             </p>
+            {errorText && (
+              <p className="mt-1 text-[10px] text-red-400">{errorText}</p>
+            )}
           </form>
         </section>
 
