@@ -3,21 +3,16 @@ import { Link } from "react-router-dom";
 import { useTheme } from "../theme";
 
 export default function LandingPage() {
-  const { theme, toggle } = useTheme();
+  const { theme, toggle } = useTheme(); // ✅ add this
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
-      {/* Background glow */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-slate-950" />
-        <div className="absolute -top-40 left-[-4rem] h-96 w-96 rounded-full bg-sky-400/25 blur-3xl" />
-        <div className="absolute top-40 right-[-6rem] h-80 w-80 rounded-full bg-amber-200/20 blur-3xl" />
-        <div className="absolute bottom-[-6rem] left-1/2 h-96 w-[28rem] -translate-x-1/2 rounded-full bg-slate-900/80 blur-3xl" />
-      </div>
+      {/* Background glow ... (leave your existing background blocks) */}
 
-      {/* Top nav */}
+      {/* HEADER START */}
       <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          {/* Brand */}
+          {/* Brand (logo + text) */}
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-cyan-300 text-xs font-semibold text-slate-900 shadow-sm">
               W
@@ -32,7 +27,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Nav + theme toggle */}
+          {/* Desktop nav + theme toggle */}
           <div className="hidden items-center gap-4 md:flex">
             <nav className="flex items-center gap-6 text-sm text-slate-700 dark:text-slate-300">
               <button className="hover:text-slate-900 dark:hover:text-slate-50 transition-colors">
@@ -69,8 +64,19 @@ export default function LandingPage() {
               </span>
             </button>
           </div>
+
+          {/* Mobile theme toggle */}
+          <button
+            type="button"
+            onClick={toggle}
+            className="flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors md:hidden"
+          >
+            <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+            <span className="sr-only">Toggle theme</span>
+          </button>
         </div>
       </header>
+      {/* HEADER END */}
 
       {/* Hero */}
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
@@ -93,9 +99,9 @@ export default function LandingPage() {
 
             <p className="mt-4 max-w-xl text-sm text-slate-600 sm:text-base dark:text-slate-300">
               WanderFlow is your AI-first trip concierge. Tell it how you feel
-              and what you’re up for it designs the trip, suggests stays,
-              finds dinner, and books activities. One flow. One assistant. No
-              tab chaos.
+              and what you’re up for it designs the trip, suggests stays, finds
+              dinner, and books activities. One flow. One assistant. No tab
+              chaos.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">

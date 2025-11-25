@@ -182,8 +182,9 @@ export default function ChatPage() {
       </div>
 
       {/* Top bar */}
-      <header className="border-b border-slate-200 bg-white/90 dark:border-slate-800/80 dark:bg-slate-950/95">
+      <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+          {/* Brand + back button */}
           <div className="flex items-center gap-3">
             <Link
               to="/"
@@ -196,7 +197,7 @@ export default function ChatPage() {
                 W
               </div>
               <div>
-                <p className="text-sm font-semibold tracking-tight">
+                <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
                   WanderFlow Concierge
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -206,6 +207,7 @@ export default function ChatPage() {
             </div>
           </div>
 
+          {/* Desktop status + theme toggle */}
           <div className="hidden items-center gap-4 sm:flex">
             <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-slate-400">
               <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 border border-slate-300 dark:bg-slate-900 dark:border-slate-700">
@@ -226,6 +228,16 @@ export default function ChatPage() {
               </span>
             </button>
           </div>
+
+          {/* Mobile theme toggle */}
+          <button
+            type="button"
+            onClick={toggle}
+            className="flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors sm:hidden"
+          >
+            <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+            <span className="sr-only">Toggle theme</span>
+          </button>
         </div>
       </header>
 
