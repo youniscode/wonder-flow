@@ -1,8 +1,5 @@
 // src/pages/LandingPage.tsx
 import { Link } from "react-router-dom";
-
-import React from "react";
-
 const categories = [
   { label: "Travel", desc: "Trains, flights, getaways.", pill: "Move" },
   { label: "Stays", desc: "Hotels, boutiques, hideaways.", pill: "Stay" },
