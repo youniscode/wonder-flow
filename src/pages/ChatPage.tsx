@@ -171,6 +171,8 @@ export default function ChatPage() {
   };
 
   const hasUserMessage = messages.some((m) => m.role === "user");
+  const lastUserTrip =
+    [...messages].reverse().find((m) => m.role === "user")?.content || "";
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
@@ -342,12 +344,27 @@ export default function ChatPage() {
             <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
               Trip context
             </p>
+
             <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
-              No trip set yet
+              {hasUserMessage ? "Current trip" : "No trip set yet"}
             </p>
-            <p className="mt-1 text-[13px] text-slate-600 leading-relaxed dark:text-slate-400">
-              Start with a simple description: city, dates, who you’re with and
-              the kind of weekend you’re hoping for.
+
+            {/* Current trip summary chip */}
+            {hasUserMessage && lastUserTrip && (
+              <div className="mt-2 inline-flex max-w-full items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="truncate">
+                  {lastUserTrip.length > 110
+                    ? lastUserTrip.slice(0, 107) + "…"
+                    : lastUserTrip}
+                </span>
+              </div>
+            )}
+
+            <p className="mt-3 text-[13px] text-slate-600 leading-relaxed dark:text-slate-400">
+              {hasUserMessage
+                ? "You can now ask to make it calmer, fancier, cheaper, or swap neighborhoods and I’ll reshape it."
+                : "Start with a simple description: city, dates, who you’re with and the kind of weekend you’re hoping for."}
             </p>
 
             <ul className="mt-3 space-y-1.5 text-[12px] text-slate-700 leading-relaxed dark:text-slate-300">
