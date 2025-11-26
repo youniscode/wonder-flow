@@ -79,20 +79,50 @@ function buildCardsFromLines(
   sectionTitle: string
 ): TripCard[] {
   return lines.map((line, idx) => {
-    // Try to split "Title — description" or "Title - description"
-    const split = line.split(/[-–—]{1}/);
-    const rawTitle = split[0]?.trim() || line.trim();
-    const rawDesc = split.slice(1).join("–").trim();
+    // Extract optional "(...)" metadata at the end
+    const metaMatch = line.match(/^(.*?)(\(([^)]+)\))?\s*$/);
+    const mainPart = metaMatch?.[1]?.trim() || line.trim();
+    const metaRaw = metaMatch?.[3]?.trim() || "";
+
+    // Split "Title — description"
+    const [titlePart, descPart] = mainPart.split(/[-–—]/, 2);
+    const rawTitle = (titlePart || mainPart).trim();
+    const rawDesc = descPart?.trim() || "";
+
+    // Defaults
+    let partOfDay: TripCard["partOfDay"] = "Any";
+    let priceHint: string | undefined;
+
+    if (metaRaw) {
+      const metaBits = metaRaw.split(",").map((m) => m.trim().toLowerCase());
+
+      for (const bit of metaBits) {
+        if (bit.includes("morning")) partOfDay = "Morning";
+        else if (bit.includes("afternoon")) partOfDay = "Afternoon";
+        else if (bit.includes("evening")) partOfDay = "Evening";
+        else if (bit.includes("night")) partOfDay = "Night";
+
+        if (bit.includes("free")) {
+          priceHint = "Free or almost free";
+        } else if (bit === "€") {
+          priceHint = "€ · budget-friendly";
+        } else if (bit === "€€") {
+          priceHint = "€€ · mid-range";
+        } else if (bit === "€€€") {
+          priceHint = "€€€ · higher-end";
+        }
+      }
+    }
 
     return {
       id: `${sectionTitle}-${idx}`,
-      dayLabel: "Day 1", // for now; later we’ll parse real days
-      partOfDay: "Any",
+      dayLabel: "Day 1", // later we can make this real
+      partOfDay,
       title: rawTitle,
       subtitle: "",
       description: rawDesc || undefined,
       imageKey: undefined,
-      priceHint: undefined,
+      priceHint,
       timeHint: undefined,
     };
   });

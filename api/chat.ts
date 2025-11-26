@@ -44,11 +44,17 @@ Special rules for Activities: (important for UI)
 - Under Activities:, write 3–6 lines.
 - EACH line will become a visual card.
 - Each line MUST follow this format:
-  Place or activity name — one short, concrete sentence about what they’ll do there.
-  Example:
-  Alfama walk and viewpoint — slow morning wander through the alleys with a stop at a hilltop viewpoint.
-- No extra punctuation or emojis at the start of these lines.
-- Do not add bullet markers like "- " at the start; just write the line.
+  Place or activity name — one short, concrete sentence about what they’ll do there (optional metadata).
+- At the very end of the line, you MAY add an optional parenthesis with time-of-day and rough budget, like:
+  (Morning, free)
+  (Afternoon, €)
+  (Evening, €€)
+  (Night, €€€)
+- Examples:
+  Alfama walk and viewpoint — slow morning wander through the alleys with a stop at a hilltop viewpoint (Morning, free)
+  Time Out Market — casual lunch at shared tables with many stalls (Afternoon, €€)
+- Do NOT add bullet markers like "- " at the start; just write the line.
+
 
 Section guidelines:
 Intro:
