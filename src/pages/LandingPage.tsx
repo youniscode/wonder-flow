@@ -3,11 +3,17 @@ import { Link } from "react-router-dom";
 import { useTheme } from "../theme";
 
 export default function LandingPage() {
-  const { theme, toggle } = useTheme(); // ✅ add this
+  const { theme, toggle } = useTheme();
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
-      {/* Background glow ... (leave your existing background blocks) */}
+      {/* Background glow */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950" />
+        <div className="absolute -top-40 left-[-4rem] h-96 w-96 rounded-full bg-sky-300/30 blur-3xl dark:bg-sky-400/25" />
+        <div className="absolute top-40 right-[-6rem] h-80 w-80 rounded-full bg-amber-200/25 blur-3xl dark:bg-amber-200/20" />
+        <div className="absolute bottom-[-6rem] left-1/2 h-96 w-[28rem] -translate-x-1/2 rounded-full bg-slate-100/80 blur-3xl dark:bg-slate-900/80" />
+      </div>
 
       {/* HEADER START */}
       <header className="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-950/95">
@@ -22,7 +28,7 @@ export default function LandingPage() {
                 WanderFlow
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                AI-powered trip concierge
+                Trips, stays, food and experiences · in one flow
               </p>
             </div>
           </div>
@@ -83,25 +89,25 @@ export default function LandingPage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
           {/* Left: copy */}
           <section>
-            <p className="inline-flex items-center gap-2 rounded-full bg-slate-900/80 px-3 py-1 text-[11px] text-slate-300 border border-slate-700/80">
+            <p className="inline-flex items-center gap-2 rounded-full bg-slate-900/90 px-3 py-1 text-[11px] text-slate-200 border border-slate-800">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               AI concierge for weekends, trips, and nights out.
             </p>
 
             <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               <span className="block text-slate-900 dark:text-slate-50">
-                Plan less,
+                Plan less.
               </span>
               <span className="block text-sky-500 dark:text-sky-300">
-                travel more.
+                Enjoy the city more.
               </span>
             </h1>
 
             <p className="mt-4 max-w-xl text-sm text-slate-600 sm:text-base dark:text-slate-300">
-              WanderFlow is your AI-first trip concierge. Tell it how you feel
-              and what you’re up for it designs the trip, suggests stays, finds
-              dinner, and books activities. One flow. One assistant. No tab
-              chaos.
+              WonderFlow is your quiet travel concierge. Tell it who you’re
+              with, how you feel and what you’re up for — it finds the area,
+              suggests stays, picks restaurants and lines up a few things to do.
+              One place, one flow, no tab overload.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -117,7 +123,7 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-4 text-[11px] text-slate-400">
+            <div className="mt-5 flex flex-wrap gap-4 text-[11px] text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 Live beta · Limited early access
@@ -130,7 +136,7 @@ export default function LandingPage() {
           <section className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-3">
               {/* Destinations */}
-              <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
+              <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
                 <div className="h-32 md:h-40 overflow-hidden">
                   <img
                     src="/trips/destinations.png"
@@ -149,7 +155,7 @@ export default function LandingPage() {
               </div>
 
               {/* Hotels */}
-              <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
+              <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
                 <div className="h-32 md:h-40 overflow-hidden">
                   <img
                     src="/trips/hotel.png"
@@ -168,7 +174,7 @@ export default function LandingPage() {
               </div>
 
               {/* Experiences */}
-              <div className="group relative overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
+              <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.18)] dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-[0_22px_60px_rgba(15,23,42,0.95)]">
                 <div className="h-32 md:h-40 overflow-hidden">
                   <img
                     src="/trips/experiences.png"
@@ -188,39 +194,39 @@ export default function LandingPage() {
             </div>
 
             {/* “How it feels to use” teaser */}
-            <div className="grid gap-3 sm:grid-cols-3 text-[12px] text-slate-300">
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
+            <div className="grid gap-3 sm:grid-cols-3 text-[12px] text-slate-800 dark:text-slate-300">
+              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                   Step 1
                 </p>
-                <p className="mt-1 font-medium text-slate-50">
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
                   Tell WanderFlow how you feel.
                 </p>
-                <p className="mt-1 text-[12px]">
+                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
                   Share mood, budget, and who you’re traveling with. No forms,
                   just a simple conversation.
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
+              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                   Step 2
                 </p>
-                <p className="mt-1 font-medium text-slate-50">
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
                   Get a curated itinerary in seconds.
                 </p>
-                <p className="mt-1 text-[12px]">
+                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
                   Your concierge suggests stays, dining, and experiences that
                   actually fit your trip.
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
+              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                   Step 3
                 </p>
-                <p className="mt-1 font-medium text-slate-50">
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
                   Book everything in one place.
                 </p>
-                <p className="mt-1 text-[12px]">
+                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
                   Adjust, swap options, and confirm — without juggling six
                   different apps and tabs.
                 </p>
@@ -230,7 +236,7 @@ export default function LandingPage() {
         </div>
 
         {/* Footer mini */}
-        <footer className="mt-10 flex flex-col gap-3 border-t border-slate-900 pt-5 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-5 text-[11px] text-slate-500 dark:border-slate-900 dark:text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} WanderFlow. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <span>Privacy</span>

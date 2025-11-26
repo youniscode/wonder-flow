@@ -14,13 +14,13 @@ const initialMessages: ChatMessage[] = [
     id: 1,
     role: "assistant",
     content:
-      "Hi, I’m your WanderFlow concierge. Tell me about your next trip or weekend and I’ll help you design it.",
+      "Hi, I’m your WonderFlow concierge. Tell me where you’re going, who you’re with, and what kind of vibe you want.",
   },
   {
     id: 2,
     role: "assistant",
     content:
-      "You can share things like: “3 days in Lisbon, calm vibe, good food, budget mid-range, 2 people.”",
+      "For example: “3 days in Lisbon, calm vibe, good food, mid-range budget, 2 people.”",
   },
 ];
 
@@ -68,18 +68,18 @@ function AssistantBubble({ text }: { text: string }) {
   // Fallback: no structure detected → simple bubble
   if (!sections) {
     return (
-      <div className="max-w-[80%] rounded-2xl bg-[#060B17]/95 px-3.5 py-2.5 text-[13px] text-slate-100 leading-relaxed border border-slate-800/90">
+      <div className="max-w-[80%] rounded-2xl bg-slate-100 px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed border border-slate-200 shadow-sm dark:bg-[#060B17]/95 dark:text-slate-100 dark:border-slate-800/90">
         {text}
       </div>
     );
   }
 
   return (
-    <div className="max-w-[80%] rounded-2xl bg-[#060B17]/95 px-3.5 py-2.5 text-[13px] text-slate-100 leading-relaxed border border-slate-800/90 space-y-3">
+    <div className="max-w-[80%] rounded-2xl bg-slate-100 px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed border border-slate-200 shadow-sm space-y-3 dark:bg-[#060B17]/95 dark:text-slate-100 dark:border-slate-800/90">
       {sections.map((section) => (
         <div key={section.title} className="space-y-1">
           {section.title !== "Intro" && (
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {section.title}
             </p>
           )}
@@ -161,7 +161,7 @@ export default function ChatPage() {
         id: Date.now() + 2,
         role: "assistant",
         content:
-          "I ran into an issue talking to my planning engine. Please try sending your message again shortly.",
+          "I ran into an issue shaping the plan. Please try sending your message again shortly.",
       };
 
       setMessages((prev) => [...prev, assistantErrorMessage]);
@@ -176,9 +176,9 @@ export default function ChatPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       {/* Background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[#020618]" />
-        <div className="absolute -top-40 left-[-4rem] h-80 w-80 rounded-full bg-sky-400/20 blur-3xl" />
-        <div className="absolute bottom-[-4rem] right-[-3rem] h-96 w-72 rounded-full bg-amber-200/18 blur-3xl" />
+        <div className="absolute inset-0 bg-slate-50 dark:bg-[#020618]" />
+        <div className="absolute -top-40 left-[-4rem] h-80 w-80 rounded-full bg-sky-300/25 blur-3xl dark:bg-sky-400/20" />
+        <div className="absolute bottom-[-4rem] right-[-3rem] h-96 w-72 rounded-full bg-amber-200/24 blur-3xl dark:bg-amber-200/18" />
       </div>
 
       {/* Top bar */}
@@ -198,10 +198,10 @@ export default function ChatPage() {
               </div>
               <div>
                 <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-                  WanderFlow Concierge
+                  WonderFlow Concierge
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Trip planning assistant · Beta
+                  City, stays, food and plans · Beta
                 </p>
               </div>
             </div>
@@ -244,23 +244,23 @@ export default function ChatPage() {
       {/* Main */}
       <main className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:py-8 lg:flex-row">
         {/* Concierge card (chat) */}
-        <section className="flex-1 rounded-3xl border border-slate-800/80 bg-[#050815]/95 shadow-[0_26px_80px_rgba(15,23,42,0.9)]">
+        <section className="flex-1 rounded-3xl border border-slate-200 bg-white/95 shadow-[0_20px_55px_rgba(15,23,42,0.16)] flex flex-col dark:border-slate-800/80 dark:bg-[#050815]/95 dark:shadow-[0_26px_80px_rgba(15,23,42,0.9)]">
           {/* Card header */}
-          <div className="border-b border-slate-800/80 px-4 py-3 sm:px-5">
+          <div className="border-b border-slate-200 px-4 py-3 sm:px-5 dark:border-slate-800/80">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  Concierge · AI
+                  Trip concierge
                 </p>
-                <p className="mt-1 text-sm font-semibold text-slate-50">
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-50">
                   Tell me how you like to travel, I’ll handle the plan.
                 </p>
-                <p className="mt-1 text-[12px] text-slate-400 leading-relaxed">
+                <p className="mt-1 text-[12px] text-slate-600 leading-relaxed dark:text-slate-400">
                   Share city, dates, who you’re with, your budget and mood. I’ll
                   respond with a tailored itinerary you can tweak.
                 </p>
               </div>
-              <span className="hidden rounded-full bg-slate-900 px-3 py-1 text-[11px] text-slate-300 border border-slate-700/70 sm:inline-flex whitespace-nowrap">
+              <span className="hidden rounded-full bg-slate-100 px-3 py-1 text-[11px] text-slate-600 border border-slate-300 sm:inline-flex whitespace-nowrap dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700/70">
                 One assistant for your whole trip
               </span>
             </div>
@@ -276,7 +276,7 @@ export default function ChatPage() {
                 }
               >
                 {m.role === "user" ? (
-                  <div className="max-w-[80%] rounded-2xl bg-[#F5EDE0] px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed shadow-[0_16px_40px_rgba(250,235,215,0.35)] border border-[#E4D6C1]">
+                  <div className="max-w-[80%] rounded-2xl bg-[#F5EDE0] px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed shadow-[0_16px_40px_rgba(250,235,215,0.35)] border border-[#E4D6C1] dark:bg-[#F5EDE0] dark:text-slate-900">
                     {m.content}
                   </div>
                 ) : (
@@ -287,7 +287,7 @@ export default function ChatPage() {
 
             {/* Status line */}
             <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-500">
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 border border-slate-700/80">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 border border-slate-300 dark:bg-slate-900 dark:border-slate-700/80">
                 …
               </span>
               <span className="leading-relaxed">
@@ -307,16 +307,16 @@ export default function ChatPage() {
           {/* Input */}
           <form
             onSubmit={handleSubmit}
-            className="border-t border-slate-800/80 bg-[#050815]/95 px-3 py-3 sm:px-5"
+            className="border-t border-slate-200 bg-white/95 px-3 py-3 sm:px-5 dark:border-slate-800/80 dark:bg-[#050815]/95"
           >
             <div className="flex items-end gap-2">
-              <div className="flex-1 rounded-2xl border border-slate-700 bg-[#020617]/90 px-3 py-2">
+              <div className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-700 dark:bg-[#020617]/90">
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   rows={2}
                   placeholder="Example: “3 days in Lisbon, relaxed, 2 people, love walking, mid-range budget.”"
-                  className="w-full resize-none bg-transparent text-[13px] text-slate-100 leading-relaxed outline-none placeholder:text-slate-500"
+                  className="w-full resize-none bg-transparent text-[13px] text-slate-900 leading-relaxed outline-none placeholder:text-slate-500 dark:text-slate-100"
                 />
               </div>
               <button
@@ -338,28 +338,28 @@ export default function ChatPage() {
         {/* Right column: trip context + quick prompts */}
         <aside className="lg:w-72 flex-shrink-0 space-y-4">
           {/* Trip context card */}
-          <div className="rounded-3xl border border-slate-800/80 bg-[#050815]/95 p-4">
+          <div className="rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#050815]/95 dark:shadow-none">
             <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
               Trip context
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-50">
+            <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
               No trip set yet
             </p>
-            <p className="mt-1 text-[13px] text-slate-400 leading-relaxed">
-              Tell WanderFlow where you’re going, for how long, who you’re
-              traveling with, and the vibe you’re after.
+            <p className="mt-1 text-[13px] text-slate-600 leading-relaxed dark:text-slate-400">
+              Start with a simple description: city, dates, who you’re with and
+              the kind of weekend you’re hoping for.
             </p>
 
-            <ul className="mt-3 space-y-1.5 text-[12px] text-slate-300 leading-relaxed">
-              <li>• City or region</li>
+            <ul className="mt-3 space-y-1.5 text-[12px] text-slate-700 leading-relaxed dark:text-slate-300">
+              <li>• City or area</li>
               <li>• Dates or rough timing</li>
-              <li>• Group: solo, couple, friends, family</li>
+              <li>• Who you’re with (solo, couple, friends, family)</li>
               <li>• Budget & mood: calm, foodie, nightlife, outdoors…</li>
             </ul>
           </div>
 
           {/* Quick prompts */}
-          <div className="rounded-3xl border border-slate-800/80 bg-[#050815]/95 p-4">
+          <div className="rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#050815]/95 dark:shadow-none">
             <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
               Try asking
             </p>
@@ -371,7 +371,7 @@ export default function ChatPage() {
                     "Weekend in Barcelona, 2 people, good food, some nightlife, mid-range budget."
                   )
                 }
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-left text-[13px] text-slate-200 leading-relaxed hover:border-sky-400/70 hover:text-sky-100 hover:bg-slate-900 transition-colors"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-[13px] text-slate-800 leading-relaxed hover:border-sky-400/70 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-sky-400/70 dark:hover:text-sky-100 dark:hover:bg-slate-900"
               >
                 “Weekend in Barcelona, 2 people, good food and some nightlife.”
               </button>
@@ -383,7 +383,7 @@ export default function ChatPage() {
                     "Family trip to Lisbon, 3 days, kids 7 and 10, calm but fun, want walks and easy food."
                   )
                 }
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-left text-[13px] text-slate-200 leading-relaxed hover:border-sky-400/70 hover:text-sky-100 hover:bg-slate-900 transition-colors"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-[13px] text-slate-800 leading-relaxed hover:border-sky-400/70 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-sky-400/70 dark:hover:text-sky-100 dark:hover:bg-slate-900"
               >
                 “Family trip to Lisbon, 3 days, kids 7 and 10, calm but fun.”
               </button>
@@ -395,7 +395,7 @@ export default function ChatPage() {
                     "Solo weekend in Paris, low budget, walkable, cafés and a couple of museums."
                   )
                 }
-                className="w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-left text-[13px] text-slate-200 leading-relaxed hover:border-sky-400/70 hover:text-sky-100 hover:bg-slate-900 transition-colors"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-[13px] text-slate-800 leading-relaxed hover:border-sky-400/70 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-sky-400/70 dark:hover:text-sky-100 dark:hover:bg-slate-900"
               >
                 “Solo weekend in Paris, low budget, walkable, museums and
                 cafés.”
