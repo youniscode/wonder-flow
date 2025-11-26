@@ -351,8 +351,10 @@ export default function ChatPage() {
 
             {/* Current trip summary chip */}
             {hasUserMessage && lastUserTrip && (
-              <div className="mt-2 inline-flex max-w-full items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <div className="mt-2 inline-flex max-w-full items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] text-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.15)] dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:shadow-[0_18px_40px_rgba(15,23,42,0.7)]">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] text-slate-800 dark:bg-slate-800 dark:text-slate-100">
+                  📍
+                </span>
                 <span className="truncate">
                   {lastUserTrip.length > 110
                     ? lastUserTrip.slice(0, 107) + "…"
