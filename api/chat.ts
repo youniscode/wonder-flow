@@ -102,22 +102,25 @@ export default async function handler(req: any, res: any) {
             });
         }
 
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-                model: "gpt-4.1-mini",
-                temperature: 0.5,
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    // Spread the conversation from the client
-                    ...messages,
-                ],
-            }),
-        });
+        const response: any = await fetch(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model: "gpt-4.1-mini",
+                    temperature: 0.5,
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        // Spread the conversation from the client
+                        ...messages,
+                    ],
+                }),
+            }
+        );
 
         const data = await response.json();
 

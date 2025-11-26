@@ -74,6 +74,28 @@ function parseTravelSections(text: string): TravelSection[] | null {
   return hasKnown ? sections : null;
 }
 
+function pickImageKey(title: string): string | undefined {
+  const t = title.toLowerCase();
+
+  // Lisbon examples
+  if (t.includes("belém")) return "lisbon-belem";
+  if (t.includes("alfama")) return "lisbon-alfama";
+  if (t.includes("oceanarium")) return "lisbon-oceanarium";
+  if (t.includes("chiado")) return "lisbon-chiado";
+
+  // Barcelona examples
+  if (t.includes("gothic")) return "bcn-gothic";
+  if (t.includes("eixample")) return "bcn-eixample";
+  if (t.includes("montjuïc") || t.includes("montjuic")) return "bcn-montjuic";
+
+  // Paris examples
+  if (t.includes("montmartre")) return "paris-montmartre";
+  if (t.includes("louvre")) return "paris-louvre";
+  if (t.includes("tuileries")) return "paris-tuileries";
+
+  return undefined; // fallback
+}
+
 function buildCardsFromLines(
   lines: string[],
   sectionTitle: string
@@ -121,7 +143,7 @@ function buildCardsFromLines(
       title: rawTitle,
       subtitle: "",
       description: rawDesc || undefined,
-      imageKey: undefined,
+      imageKey: pickImageKey(rawTitle),
       priceHint,
       timeHint: undefined,
     };
