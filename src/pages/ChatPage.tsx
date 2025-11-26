@@ -76,25 +76,40 @@ function AssistantBubble({ text }: { text: string }) {
 
   return (
     <div className="max-w-[80%] rounded-2xl bg-slate-100 px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed border border-slate-200 shadow-sm space-y-3 dark:bg-[#060B17]/95 dark:text-slate-100 dark:border-slate-800/90">
-      {sections.map((section) => (
-        <div key={section.title} className="space-y-1">
-          {section.title !== "Intro" && (
+      {sections.map((section) => {
+        const isIntro = section.title === "Intro";
+
+        if (isIntro) {
+          // Soft intro paragraph at the top
+          return (
+            <div
+              key={section.title}
+              className="text-[13px] leading-relaxed text-slate-900 dark:text-slate-100"
+            >
+              <p>{section.lines.join(" ")}</p>
+            </div>
+          );
+        }
+
+        // Stay / Food / Activities / Tips → stacked itinerary cards
+        return (
+          <div
+            key={section.title}
+            className="rounded-xl bg-slate-50 border border-slate-200 px-3 py-2.5 shadow-sm dark:bg-[#020617] dark:border-slate-700"
+          >
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
               {section.title}
             </p>
-          )}
-
-          {section.title === "Intro" ? (
-            <p>{section.lines.join(" ")}</p>
-          ) : (
-            <ul className="list-disc list-inside space-y-0.5">
+            <ul className="mt-1.5 space-y-0.5 text-[13px] leading-relaxed">
               {section.lines.map((line, idx) => (
-                <li key={idx}>{line}</li>
+                <li key={idx} className="pl-1">
+                  {line}
+                </li>
               ))}
             </ul>
-          )}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
