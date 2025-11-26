@@ -31,6 +31,18 @@ type TravelSection = {
   lines: string[];
 };
 
+type TripCard = {
+  id: string;
+  dayLabel: string; // e.g. "Day 1", "Day 2"
+  partOfDay: "Morning" | "Afternoon" | "Evening" | "Night" | "Any";
+  title: string; // e.g. "Alfama walk + viewpoint"
+  subtitle?: string; // e.g. "Slow walk through the old streets"
+  description?: string; // 1–2 lines max
+  imageKey?: string; // e.g. "lisbon_view", will map to /trips/... later
+  priceHint?: string; // e.g. "€15–25 pp"
+  timeHint?: string; // e.g. "1–2 hours"
+};
+
 function parseTravelSections(text: string): TravelSection[] | null {
   const rawLines = text
     .split("\n")
@@ -111,6 +123,82 @@ function AssistantBubble({ text }: { text: string }) {
         );
       })}
     </div>
+  );
+}
+
+function TripCard({ card }: { card: TripCard }) {
+  const {
+    dayLabel,
+    partOfDay,
+    title,
+    subtitle,
+    description,
+    imageKey,
+    priceHint,
+    timeHint,
+  } = card;
+
+  // Later we can map imageKey → real images.
+  const imageSrc = imageKey
+    ? `/trips/${imageKey}.jpg`
+    : "/trips/placeholder.jpg";
+
+  return (
+    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.14)] dark:border-slate-800 dark:bg-[#020617] dark:shadow-[0_18px_50px_rgba(15,23,42,0.9)]">
+      {/* Image */}
+      <div className="h-32 w-full overflow-hidden md:h-36">
+        <img
+          src={imageSrc}
+          alt={title}
+          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="space-y-2 px-3 pb-3 pt-2.5">
+        <div className="flex items-center justify-between gap-2 text-[11px]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-700 border border-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
+            {dayLabel}
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+            {partOfDay}
+          </span>
+        </div>
+
+        <div>
+          <p className="text-[13px] font-semibold text-slate-900 dark:text-slate-50">
+            {title}
+          </p>
+          {subtitle && (
+            <p className="text-[12px] text-slate-600 dark:text-slate-400">
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        {description && (
+          <p className="text-[12px] text-slate-600 leading-relaxed dark:text-slate-300">
+            {description}
+          </p>
+        )}
+
+        {(priceHint || timeHint) && (
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+            {priceHint && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-0.5 border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+                💶 <span>{priceHint}</span>
+              </span>
+            )}
+            {timeHint && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-0.5 border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+                ⏱ <span>{timeHint}</span>
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
   );
 }
 
