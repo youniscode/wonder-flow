@@ -32,7 +32,29 @@ type TravelSection = {
   lines: string[];
 };
 
+function extractCityFromText(text: string): string | null {
+  if (!text) return null;
 
+  // Try to catch "in Barcelona", "to Lisbon", etc.
+  const preps = ["in", "to"];
+  for (const prep of preps) {
+    const regex = new RegExp(
+      `\\b${prep}\\s+([A-ZÀ-ÖØ-Ý][a-zA-ZÀ-ÿ]*(?:\\s+[A-ZÀ-ÖØ-Ý][a-zA-ZÀ-ÿ]*)*)`
+    );
+    const match = text.match(regex);
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+  }
+
+  // Fallback: first bit before a comma (e.g. "Barcelona weekend")
+  const firstPart = text.split(",")[0]?.trim();
+  if (firstPart && firstPart.length <= 40) {
+    return firstPart;
+  }
+
+  return null;
+}
 
 function parseTravelSections(text: string): TravelSection[] | null {
   const rawLines = text
@@ -65,11 +87,13 @@ function parseTravelSections(text: string): TravelSection[] | null {
   return hasKnown ? sections : null;
 }
 
-
-
-
-
-function AssistantBubble({ text }: { text: string }) {
+function AssistantBubble({
+  text,
+  cityHint,
+}: {
+  text: string;
+  cityHint?: string | null;
+}) {
   const sections = parseTravelSections(text);
 
   // Fallback: no structure detected → simple bubble
@@ -123,6 +147,11 @@ function AssistantBubble({ text }: { text: string }) {
 
                   const dayLabel = "Day 1";
 
+                  // Make Unsplash query city-aware when we can
+                  const searchQuery = cityHint
+                    ? `${title || mainPart} ${cityHint}`
+                    : title || mainPart;
+
                   return (
                     <ItineraryActivityCard
                       key={idx}
@@ -131,7 +160,7 @@ function AssistantBubble({ text }: { text: string }) {
                       dayLabel={dayLabel}
                       timeLabel={timeLabel}
                       priceLabel={priceLabel}
-                      imageQuery={title || mainPart}
+                      imageQuery={searchQuery}
                     />
                   );
                 })}
@@ -237,6 +266,9 @@ export default function ChatPage() {
   const hasUserMessage = messages.some((m) => m.role === "user");
   const lastUserTrip =
     [...messages].reverse().find((m) => m.role === "user")?.content || "";
+
+  const cityHint: string | undefined =
+    extractCityFromText(lastUserTrip) || undefined;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
@@ -346,7 +378,7 @@ export default function ChatPage() {
                     {m.content}
                   </div>
                 ) : (
-                  <AssistantBubble text={m.content} />
+                  <AssistantBubble text={m.content} cityHint={cityHint} />
                 )}
               </div>
             ))}
