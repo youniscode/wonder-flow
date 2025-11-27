@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useTheme } from "../theme";
+import { ItineraryActivityCard } from "../components/ItineraryActivityCard";
 
 type ChatMessage = {
   id: number;
@@ -31,17 +32,7 @@ type TravelSection = {
   lines: string[];
 };
 
-type TripCard = {
-  id: string;
-  dayLabel: string; // e.g. "Day 1", "Day 2"
-  partOfDay: "Morning" | "Afternoon" | "Evening" | "Night" | "Any";
-  title: string; // e.g. "Alfama walk + viewpoint"
-  subtitle?: string; // e.g. "Slow walk through the old streets"
-  description?: string; // 1–2 lines max
-  imageKey?: string; // e.g. "lisbon_view", will map to /trips/... later
-  priceHint?: string; // e.g. "€15–25 pp"
-  timeHint?: string; // e.g. "1–2 hours"
-};
+
 
 function parseTravelSections(text: string): TravelSection[] | null {
   const rawLines = text
@@ -60,10 +51,10 @@ function parseTravelSections(text: string): TravelSection[] | null {
       if (current) sections.push(current);
       current = { title: m[1], lines: [] };
     } else if (current) {
-      // strip leading "- " if present
+      // Strip leading "- " if present
       current.lines.push(line.replace(/^-+\s*/, ""));
     } else {
-      // text before the first heading → treat as Intro
+      // Text before the first heading → treat as Intro
       current = { title: "Intro", lines: [line] };
     }
   }
@@ -74,81 +65,9 @@ function parseTravelSections(text: string): TravelSection[] | null {
   return hasKnown ? sections : null;
 }
 
-function pickImageKey(title: string): string | undefined {
-  const t = title.toLowerCase();
 
-  // Lisbon examples
-  if (t.includes("belém")) return "lisbon-belem";
-  if (t.includes("alfama")) return "lisbon-alfama";
-  if (t.includes("oceanarium")) return "lisbon-oceanarium";
-  if (t.includes("chiado")) return "lisbon-chiado";
 
-  // Barcelona examples
-  if (t.includes("gothic")) return "bcn-gothic";
-  if (t.includes("eixample")) return "bcn-eixample";
-  if (t.includes("montjuïc") || t.includes("montjuic")) return "bcn-montjuic";
 
-  // Paris examples
-  if (t.includes("montmartre")) return "paris-montmartre";
-  if (t.includes("louvre")) return "paris-louvre";
-  if (t.includes("tuileries")) return "paris-tuileries";
-
-  return undefined; // fallback
-}
-
-function buildCardsFromLines(
-  lines: string[],
-  sectionTitle: string
-): TripCard[] {
-  return lines.map((line, idx) => {
-    // Extract optional "(...)" metadata at the end
-    const metaMatch = line.match(/^(.*?)(\(([^)]+)\))?\s*$/);
-    const mainPart = metaMatch?.[1]?.trim() || line.trim();
-    const metaRaw = metaMatch?.[3]?.trim() || "";
-
-    // Split "Title — description"
-    const [titlePart, descPart] = mainPart.split(/[-–—]/, 2);
-    const rawTitle = (titlePart || mainPart).trim();
-    const rawDesc = descPart?.trim() || "";
-
-    // Defaults
-    let partOfDay: TripCard["partOfDay"] = "Any";
-    let priceHint: string | undefined;
-
-    if (metaRaw) {
-      const metaBits = metaRaw.split(",").map((m) => m.trim().toLowerCase());
-
-      for (const bit of metaBits) {
-        if (bit.includes("morning")) partOfDay = "Morning";
-        else if (bit.includes("afternoon")) partOfDay = "Afternoon";
-        else if (bit.includes("evening")) partOfDay = "Evening";
-        else if (bit.includes("night")) partOfDay = "Night";
-
-        if (bit.includes("free")) {
-          priceHint = "Free or almost free";
-        } else if (bit === "€") {
-          priceHint = "€ · budget-friendly";
-        } else if (bit === "€€") {
-          priceHint = "€€ · mid-range";
-        } else if (bit === "€€€") {
-          priceHint = "€€€ · higher-end";
-        }
-      }
-    }
-
-    return {
-      id: `${sectionTitle}-${idx}`,
-      dayLabel: "Day 1", // later we can make this real
-      partOfDay,
-      title: rawTitle,
-      subtitle: "",
-      description: rawDesc || undefined,
-      imageKey: pickImageKey(rawTitle),
-      priceHint,
-      timeHint: undefined,
-    };
-  });
-}
 
 function AssistantBubble({ text }: { text: string }) {
   const sections = parseTravelSections(text);
@@ -165,35 +84,57 @@ function AssistantBubble({ text }: { text: string }) {
   return (
     <div className="max-w-[80%] rounded-2xl bg-slate-100 px-3.5 py-2.5 text-[13px] text-slate-900 leading-relaxed border border-slate-200 shadow-sm space-y-3 dark:bg-[#060B17]/95 dark:text-slate-100 dark:border-slate-800/90">
       {sections.map((section) => {
-        const isIntro = section.title === "Intro";
-        const isActivities =
-          section.title.toLowerCase() === "activities" &&
-          section.lines.length > 0;
-
-        // Intro → soft paragraph at the top
-        if (isIntro) {
+        // Intro stays simple text
+        if (section.title === "Intro") {
           return (
-            <div
-              key={section.title}
-              className="text-[13px] leading-relaxed text-slate-900 dark:text-slate-100"
-            >
+            <div key="intro" className="space-y-1">
               <p>{section.lines.join(" ")}</p>
             </div>
           );
         }
 
-        // Activities → visual cards
-        if (isActivities) {
-          const cards = buildCardsFromLines(section.lines, section.title);
+        // ACTIVITIES → visual cards with Unsplash images
+        if (section.title === "Activities") {
           return (
-            <div key={section.title} className="space-y-1.5">
+            <div key="activities" className="space-y-2">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                 Activities
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                {cards.map((card) => (
-                  <TripCard key={card.id} card={card} />
-                ))}
+                {section.lines.map((line, idx) => {
+                  // Expected format from system prompt:
+                  // Name — one short sentence (Time, €)
+                  const [main, metaRaw] = line.split("(");
+                  const mainPart = main.trim();
+                  const meta = metaRaw?.replace(")", "").trim() ?? "";
+
+                  const [placeName, rest] = mainPart.split(" — ");
+                  const title = (placeName || "").trim();
+                  const summary = (rest || "").trim();
+
+                  let timeLabel: string | undefined;
+                  let priceLabel: string | undefined;
+
+                  if (meta) {
+                    const parts = meta.split(",");
+                    timeLabel = parts[0]?.trim();
+                    priceLabel = parts[1]?.trim();
+                  }
+
+                  const dayLabel = "Day 1";
+
+                  return (
+                    <ItineraryActivityCard
+                      key={idx}
+                      title={title || `Activity ${idx + 1}`}
+                      summary={summary || "Nice stop for this part of the day."}
+                      dayLabel={dayLabel}
+                      timeLabel={timeLabel}
+                      priceLabel={priceLabel}
+                      imageQuery={title || mainPart}
+                    />
+                  );
+                })}
               </div>
             </div>
           );
@@ -219,82 +160,6 @@ function AssistantBubble({ text }: { text: string }) {
         );
       })}
     </div>
-  );
-}
-
-function TripCard({ card }: { card: TripCard }) {
-  const {
-    dayLabel,
-    partOfDay,
-    title,
-    subtitle,
-    description,
-    imageKey,
-    priceHint,
-    timeHint,
-  } = card;
-
-  // Later we can map imageKey → real images.
-  const imageSrc = imageKey
-    ? `/trips/${imageKey}.jpg`
-    : "/trips/placeholder.jpg";
-
-  return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.14)] dark:border-slate-800 dark:bg-[#020617] dark:shadow-[0_18px_50px_rgba(15,23,42,0.9)]">
-      {/* Image */}
-      <div className="h-32 w-full overflow-hidden md:h-36">
-        <img
-          src={imageSrc}
-          alt={title}
-          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="space-y-2 px-3 pb-3 pt-2.5">
-        <div className="flex items-center justify-between gap-2 text-[11px]">
-          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 font-medium text-slate-700 border border-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-700">
-            <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-            {dayLabel}
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-            {partOfDay}
-          </span>
-        </div>
-
-        <div>
-          <p className="text-[13px] font-semibold text-slate-900 dark:text-slate-50">
-            {title}
-          </p>
-          {subtitle && (
-            <p className="text-[12px] text-slate-600 dark:text-slate-400">
-              {subtitle}
-            </p>
-          )}
-        </div>
-
-        {description && (
-          <p className="text-[12px] text-slate-600 leading-relaxed dark:text-slate-300">
-            {description}
-          </p>
-        )}
-
-        {(priceHint || timeHint) && (
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-            {priceHint && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-0.5 border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
-                💶 <span>{priceHint}</span>
-              </span>
-            )}
-            {timeHint && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-0.5 border border-slate-200 dark:bg-slate-900 dark:border-slate-700">
-                ⏱ <span>{timeHint}</span>
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-    </article>
   );
 }
 

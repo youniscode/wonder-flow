@@ -1,14 +1,16 @@
 // src/components/ItineraryActivityCard.tsx
+// Nice: use the Unsplash proxy to decorate activities with real photos.
+
 import { useEffect, useState } from "react";
-import type { UnsplashImage } from "../../lib/unsplashClient";
-import { fetchPlaceImage } from "../../lib/unsplashClient";
+import type { UnsplashImage } from "../lib/unsplashClient";
+import { fetchPlaceImage } from "../lib/unsplashClient";
 
 type ItineraryActivityCardProps = {
   title: string;
   summary: string;
   dayLabel?: string; // e.g. "Day 1"
   timeLabel?: string; // e.g. "Morning", "Afternoon"
-  priceLabel?: string; // e.g. "€€ · mid-range" or "Free or almost free"
+  priceLabel?: string; // e.g. "€€, mid-range" or "Free or almost free"
   imageQuery?: string; // e.g. "Lisbon riverside walk"
 };
 
@@ -21,7 +23,6 @@ export function ItineraryActivityCard({
   imageQuery,
 }: ItineraryActivityCardProps) {
   const [image, setImage] = useState<UnsplashImage | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const q = imageQuery || title;
@@ -29,20 +30,14 @@ export function ItineraryActivityCard({
 
     let cancelled = false;
 
-    // Defer setLoading to next tick → silences ESLint without changing logic
-    Promise.resolve().then(() => {
-      if (!cancelled) setLoading(true);
-    });
-
     fetchPlaceImage(q)
-      .then((img: UnsplashImage | null) => {
+      .then((img) => {
         if (cancelled) return;
-        setImage(img);
-        setLoading(false);
+        if (img) setImage(img);
       })
-      .catch(() => {
+      .catch((err) => {
         if (cancelled) return;
-        setLoading(false);
+        console.error("Unsplash image fetch error:", err);
       });
 
     return () => {
@@ -51,10 +46,10 @@ export function ItineraryActivityCard({
   }, [imageQuery, title]);
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-3xl border border-slate-800/80 bg-[#050815] shadow-[0_18px_50px_rgba(15,23,42,0.9)]">
-      {/* Image */}
-      <div className="relative h-40 w-full overflow-hidden bg-slate-900">
-        {image && image.url ? (
+    <article className="flex h-full flex-col rounded-3xl border border-slate-800/80 bg-slate-900/70 shadow-[0_18px_40px_rgba(15,23,42,0.8)] overflow-hidden">
+      {/* IMAGE */}
+      <div className="relative h-36 w-full overflow-hidden bg-slate-800">
+        {image ? (
           <img
             src={image.url}
             alt={image.alt || title}
@@ -63,29 +58,39 @@ export function ItineraryActivityCard({
             decoding="async"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[11px] text-slate-500">
-            {loading ? "Finding a nice view…" : "No image yet"}
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950" />
         )}
+
+        {/* Day / time chips on top of the photo */}
+        <div className="pointer-events-none absolute inset-x-3 bottom-3 flex items-center justify-between text-[11px] font-medium">
+          {dayLabel && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-950/80 px-2 py-0.5 text-slate-100 border border-slate-700/70">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              {dayLabel}
+            </span>
+          )}
+          {timeLabel && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-950/80 px-2 py-0.5 text-slate-200 border border-slate-700/70">
+              {timeLabel}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Text content */}
+      {/* BODY */}
       <div className="flex flex-1 flex-col gap-2 px-4 py-3">
-        <div className="flex items-center justify-between text-[11px] text-slate-400 uppercase tracking-[0.16em]">
-          <span>{dayLabel || "Day 1"}</span>
-          <span className="flex gap-2">
-            {timeLabel && <span>{timeLabel}</span>}
-            {priceLabel && (
-              <span className="rounded-full border border-slate-700 px-2 py-0.5 text-[10px] text-slate-300">
-                {priceLabel}
-              </span>
-            )}
-          </span>
-        </div>
-
         <h3 className="text-sm font-semibold text-slate-50">{title}</h3>
+        <p className="text-[12px] leading-relaxed text-slate-300 line-clamp-3">
+          {summary}
+        </p>
 
-        <p className="text-[13px] leading-relaxed text-slate-300">{summary}</p>
+        <div className="mt-auto flex items-center justify-between pt-1 text-[11px] text-slate-400">
+          {priceLabel && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-0.5">
+              {priceLabel}
+            </span>
+          )}
+        </div>
       </div>
     </article>
   );
