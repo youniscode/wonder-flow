@@ -105,7 +105,7 @@ export default function LandingPage() {
 
             <p className="mt-4 max-w-xl text-sm text-slate-600 sm:text-base dark:text-slate-300">
               WonderFlow is your quiet travel concierge. Tell it who you’re
-              with, how you feel and what you’re up for — it finds the area,
+              with, how you feel and what you’re up for it finds the area,
               suggests stays, picks restaurants and lines up a few things to do.
               One place, one flow, no tab overload.
             </p>
