@@ -92,7 +92,7 @@ function AssistantBubble({
   cityHint,
 }: {
   text: string;
-  cityHint?: string | null;
+  cityHint?: string; // simplified: undefined if no city
 }) {
   const sections = parseTravelSections(text);
 
@@ -267,8 +267,9 @@ export default function ChatPage() {
   const lastUserTrip =
     [...messages].reverse().find((m) => m.role === "user")?.content || "";
 
+  // Derive a clean city hint from the latest user message
   const cityHint: string | undefined =
-    extractCityFromText(lastUserTrip) || undefined;
+    extractCityFromText(lastUserTrip) ?? undefined;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
