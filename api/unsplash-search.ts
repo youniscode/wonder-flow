@@ -30,9 +30,9 @@ function buildImageQueries(raw: string): string[] {
         "amsterdam",
         "athens",
         "amman",
-        "marseille,",
+        "marseille",
         "toulon",
-        "manchester"
+        "manchester",
     ];
 
     let city: string | null = null;
@@ -159,8 +159,8 @@ export default async function handler(
                         name?: string | null;
                         links?: {
                             html?: string | null;
-                            portfolio?: string | null;
                         };
+                        portfolio_url?: string | null;
                     };
                     links?: {
                         html?: string | null;
@@ -168,15 +168,12 @@ export default async function handler(
                 }>;
             };
 
-
             const first = data.results?.[0];
 
             if (first?.urls?.regular) {
                 const photographerName = first.user?.name ?? null;
                 const photographerProfileUrl =
-                    first.user?.links?.html ??
-                    first.user?.links?.portfolio ??
-                    null;
+                    first.user?.links?.html ?? first.user?.portfolio_url ?? null;
                 const unsplashLink = first.links?.html ?? null;
 
                 return res.status(200).json({
@@ -188,7 +185,6 @@ export default async function handler(
                     unsplashLink,
                 });
             }
-
         }
 
         // Nothing worked
@@ -202,5 +198,3 @@ export default async function handler(
             .json({ error: "Unexpected error talking to Unsplash." });
     }
 }
-
-
