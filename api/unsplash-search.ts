@@ -29,6 +29,10 @@ function buildImageQueries(raw: string): string[] {
         "berlin",
         "amsterdam",
         "athens",
+        "amman",
+        "marseille,",
+        "toulon",
+        "manchester"
     ];
 
     let city: string | null = null;
@@ -117,54 +121,69 @@ export default async function handler(
             .json({ error: "Query was empty after cleaning / parsing." });
     }
 
-    // Try each candidate until we get a usable result
-    for (const candidate of candidates) {
-        const apiUrl = new URL("https://api.unsplash.com/search/photos");
-        apiUrl.searchParams.set("query", candidate);
-        apiUrl.searchParams.set("orientation", "landscape");
-        apiUrl.searchParams.set("content_filter", "high");
-        apiUrl.searchParams.set("per_page", "1");
+    try {
+        // Try each candidate until we get a usable result
+        for (const candidate of candidates) {
+            const apiUrl = new URL("https://api.unsplash.com/search/photos");
+            apiUrl.searchParams.set("query", candidate);
+            apiUrl.searchParams.set("orientation", "landscape");
+            apiUrl.searchParams.set("content_filter", "high");
+            apiUrl.searchParams.set("per_page", "1");
 
-        const unsplashRes = await fetch(apiUrl.toString(), {
-            headers: {
-                Authorization: `Client-ID ${ACCESS_KEY}`,
-            },
-        });
+            const unsplashRes = await fetch(apiUrl.toString(), {
+                headers: {
+                    Authorization: `Client-ID ${ACCESS_KEY}`,
+                },
+            });
 
-        if (!unsplashRes.ok) {
-            const text = await unsplashRes.text();
-            console.error("Unsplash error:", unsplashRes.status, text);
+            if (!unsplashRes.ok) {
+                const text = await unsplashRes.text();
+                console.error("Unsplash error:", unsplashRes.status, text);
 
-            // Hard errors (403/5xx) → bail out instead of looping
-            if (unsplashRes.status === 403 || unsplashRes.status >= 500) {
-                return res
-                    .status(unsplashRes.status)
-                    .json({ error: "Unsplash API error" });
+                // Hard errors (403/5xx) → bail out instead of looping
+                if (unsplashRes.status === 403 || unsplashRes.status >= 500) {
+                    return res
+                        .status(unsplashRes.status)
+                        .json({ error: "Unsplash API error" });
+                }
+
+                // For 400/404 etc., just try the next candidate
+                continue;
             }
 
-            // For 400/404 etc., just try the next candidate
-            continue;
+            const data = (await unsplashRes.json()) as {
+                results?: Array<{
+                    urls?: { regular?: string; small?: string };
+                    alt_description?: string | null;
+                }>;
+            };
+
+            const first = data.results?.[0];
+            if (first?.urls?.regular) {
+                // ✅ Let Vercel cache at the edge a bit
+                res.setHeader(
+                    "Cache-Control",
+                    "s-maxage=3600, stale-while-revalidate"
+                );
+
+                return res.status(200).json({
+                    url: first.urls.regular,
+                    thumbUrl: first.urls.small ?? first.urls.regular,
+                    alt: first.alt_description || `${query} travel photo`,
+                });
+            }
         }
 
-        const data = (await unsplashRes.json()) as {
-            results?: Array<{
-                urls?: { regular?: string; small?: string };
-                alt_description?: string | null;
-            }>;
-        };
-
-        const first = data.results?.[0];
-        if (first?.urls?.regular) {
-            return res.status(200).json({
-                url: first.urls.regular,
-                thumbUrl: first.urls.small ?? first.urls.regular,
-                alt: first.alt_description || `${query} travel photo`,
-            });
-        }
+        // Nothing worked
+        return res
+            .status(404)
+            .json({ error: "No suitable image found for this query." });
+    } catch (err) {
+        console.error("Unsplash proxy error (network/unknown):", err);
+        return res
+            .status(500)
+            .json({ error: "Unexpected error talking to Unsplash." });
     }
-
-    // Nothing worked
-    return res
-        .status(404)
-        .json({ error: "No suitable image found for this query." });
 }
+
+
