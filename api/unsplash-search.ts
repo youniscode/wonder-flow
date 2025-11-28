@@ -155,23 +155,40 @@ export default async function handler(
                 results?: Array<{
                     urls?: { regular?: string; small?: string };
                     alt_description?: string | null;
+                    user?: {
+                        name?: string | null;
+                        links?: {
+                            html?: string | null;
+                            portfolio?: string | null;
+                        };
+                    };
+                    links?: {
+                        html?: string | null;
+                    };
                 }>;
             };
 
+
             const first = data.results?.[0];
+
             if (first?.urls?.regular) {
-                // ✅ Let Vercel cache at the edge a bit
-                res.setHeader(
-                    "Cache-Control",
-                    "s-maxage=3600, stale-while-revalidate"
-                );
+                const photographerName = first.user?.name ?? null;
+                const photographerProfileUrl =
+                    first.user?.links?.html ??
+                    first.user?.links?.portfolio ??
+                    null;
+                const unsplashLink = first.links?.html ?? null;
 
                 return res.status(200).json({
                     url: first.urls.regular,
                     thumbUrl: first.urls.small ?? first.urls.regular,
                     alt: first.alt_description || `${query} travel photo`,
+                    photographerName,
+                    photographerProfileUrl,
+                    unsplashLink,
                 });
             }
+
         }
 
         // Nothing worked

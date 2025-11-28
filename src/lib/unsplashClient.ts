@@ -3,6 +3,9 @@ export type UnsplashImage = {
     url: string;
     thumbUrl: string;
     alt: string;
+    photographerName?: string | null;
+    photographerProfileUrl?: string | null;
+    unsplashLink?: string | null;
 };
 
 export async function fetchPlaceImage(
@@ -20,11 +23,7 @@ export async function fetchPlaceImage(
         return null;
     }
 
-    const data = (await res.json()) as {
-        url?: string;
-        thumbUrl?: string;
-        alt?: string;
-    };
+    const data = await res.json();
 
     if (!data.url) return null;
 
@@ -32,5 +31,8 @@ export async function fetchPlaceImage(
         url: data.url,
         thumbUrl: data.thumbUrl ?? data.url,
         alt: data.alt ?? `Photo of ${trimmed}`,
+        photographerName: data.photographerName ?? null,
+        photographerProfileUrl: data.photographerProfileUrl ?? null,
+        unsplashLink: data.unsplashLink ?? null,
     };
 }

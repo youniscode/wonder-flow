@@ -90,6 +90,21 @@ export function ItineraryActivityCard({
               {priceLabel}
             </span>
           )}
+
+          {image?.photographerName && (
+            <a
+              href={
+                image.photographerProfileUrl ||
+                image.unsplashLink ||
+                "https://unsplash.com"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-[10px] text-slate-500 hover:text-slate-300 hover:underline"
+            >
+              Photo: {image.photographerName} / Unsplash
+            </a>
+          )}
         </div>
       </div>
     </article>
