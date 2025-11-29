@@ -589,9 +589,14 @@ export default function ChatPage() {
                   </span>
                 </div>
 
-                {tripMeta.vibes.length > 0 && (
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                {tripMeta.vibes && tripMeta.vibes.length > 0 ? (
+                  <p className="mt-1 text-[12px] text-slate-600 leading-relaxed dark:text-slate-400">
                     Vibe: {tripMeta.vibes.join(", ")}
+                  </p>
+                ) : (
+                  <p className="mt-1 text-[12px] text-slate-600 leading-relaxed italic dark:text-slate-400">
+                    Vibe: not sure yet — tell me if you want calm, foodie,
+                    nightlife, outdoors…
                   </p>
                 )}
               </div>
