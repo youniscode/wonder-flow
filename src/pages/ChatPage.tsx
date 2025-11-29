@@ -596,8 +596,6 @@ export default function ChatPage() {
                 )}
               </div>
             )}
-            /* Fallback: if we have a user message but couldn't parse meta, show
-            raw text */
             {hasUserMessage && !tripMeta && lastUserTrip && (
               <div className="mt-2 inline-flex max-w-full items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] text-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.15)] dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:shadow-[0_18px_40px_rgba(15,23,42,0.7)]">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] text-slate-800 dark:bg-slate-800 dark:text-slate-100">
