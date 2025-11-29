@@ -105,6 +105,20 @@ export function ItineraryActivityCard({
               Photo: {image.photographerName} / Unsplash
             </a>
           )}
+
+          {/* Attribution (only if provided) */}
+          {image?.photographerName && (
+            <a
+              href={
+                image.unsplashLink || image.photographerProfileUrl || undefined
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 text-[10px] text-slate-500 hover:text-slate-300 underline underline-offset-2"
+            >
+              Photo by {image.photographerName} on Unsplash
+            </a>
+          )}
         </div>
       </div>
     </article>
