@@ -12,6 +12,7 @@ type ItineraryActivityCardProps = {
   timeLabel?: string; // e.g. "Morning", "Afternoon"
   priceLabel?: string; // e.g. "€€, mid-range" or "Free or almost free"
   imageQuery?: string; // e.g. "Lisbon riverside walk"
+  showAttribution?: boolean; // control Unsplash credit visibility
 };
 
 export function ItineraryActivityCard({
@@ -21,6 +22,7 @@ export function ItineraryActivityCard({
   timeLabel,
   priceLabel,
   imageQuery,
+  showAttribution = true,
 }: ItineraryActivityCardProps) {
   const [image, setImage] = useState<UnsplashImage | null>(null);
 
@@ -91,18 +93,17 @@ export function ItineraryActivityCard({
             </span>
           )}
 
-          {image?.photographerName && (
+          {/* Attribution (only if provided and enabled) */}
+          {image?.photographerName && showAttribution && (
             <a
               href={
-                image.photographerProfileUrl ||
-                image.unsplashLink ||
-                "https://unsplash.com"
+                image.unsplashLink || image.photographerProfileUrl || undefined
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 text-[10px] text-slate-500 hover:text-slate-300 hover:underline"
+              className="mt-1 text-[10px] text-slate-500 hover:text-slate-300 underline underline-offset-2"
             >
-              Photo: {image.photographerName} / Unsplash
+              Photo by {image.photographerName} on Unsplash
             </a>
           )}
 

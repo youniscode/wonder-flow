@@ -90,9 +90,11 @@ function parseTravelSections(text: string): TravelSection[] | null {
 function AssistantBubble({
   text,
   cityHint,
+  showAttribution,
 }: {
   text: string;
-  cityHint?: string; // simplified: undefined if no city
+  cityHint?: string | null;
+  showAttribution?: boolean;
 }) {
   const sections = parseTravelSections(text);
 
@@ -161,6 +163,7 @@ function AssistantBubble({
                       timeLabel={timeLabel}
                       priceLabel={priceLabel}
                       imageQuery={searchQuery}
+                      showAttribution={showAttribution}
                     />
                   );
                 })}
@@ -198,6 +201,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [showAttribution, setShowAttribution] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -316,6 +320,18 @@ export default function ChatPage() {
               <span>Plan a weekend, city break, or full trip.</span>
             </div>
 
+            {/* Photo credits toggle (desktop) */}
+            <button
+              type="button"
+              onClick={() => setShowAttribution((prev) => !prev)}
+              className="flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors"
+            >
+              <span>🖼️</span>
+              <span className="hidden sm:inline">
+                {showAttribution ? "Credits on" : "Credits off"}
+              </span>
+            </button>
+
             <button
               type="button"
               onClick={toggle}
@@ -336,6 +352,18 @@ export default function ChatPage() {
           >
             <span>{theme === "dark" ? "☀️" : "🌙"}</span>
             <span className="sr-only">Toggle theme</span>
+          </button>
+          {/* Mobile photo credits toggle */}
+          <button
+            type="button"
+            onClick={() => setShowAttribution((prev) => !prev)}
+            className="mt-2 flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-[11px] font-medium text-slate-900 hover:border-sky-400 hover:text-sky-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:text-sky-100 transition-colors sm:hidden"
+          >
+            <span>🖼️</span>
+            <span className="sr-only">Toggle photo credits</span>
+            <span aria-hidden="true">
+              {showAttribution ? "Credits on" : "Credits off"}
+            </span>
           </button>
         </div>
       </header>
@@ -379,7 +407,11 @@ export default function ChatPage() {
                     {m.content}
                   </div>
                 ) : (
-                  <AssistantBubble text={m.content} cityHint={cityHint} />
+                  <AssistantBubble
+                    text={m.content}
+                    cityHint={cityHint}
+                    showAttribution={showAttribution}
+                  />
                 )}
               </div>
             ))}
