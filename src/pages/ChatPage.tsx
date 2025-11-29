@@ -32,6 +32,14 @@ type TravelSection = {
   lines: string[];
 };
 
+type TripMeta = {
+  city?: string;
+  days?: number;
+  group?: "solo" | "couple" | "friends" | "family" | "group" | "mixed";
+  budget?: "€" | "€€" | "€€€" | "unknown";
+  vibes: string[];
+};
+
 function extractCityFromText(text: string): string | null {
   if (!text) return null;
 
@@ -54,6 +62,75 @@ function extractCityFromText(text: string): string | null {
   }
 
   return null;
+}
+
+function parseTripMeta(text: string): TripMeta | null {
+  if (!text) return null;
+
+  const lower = text.toLowerCase();
+  const city = extractCityFromText(text) || undefined;
+
+  // Days
+  let days: number | undefined;
+  const dayMatch = lower.match(/(\d+)\s*(day|days|night|nights)/);
+  if (dayMatch) {
+    const n = parseInt(dayMatch[1], 10);
+    if (!Number.isNaN(n) && n > 0 && n <= 30) {
+      days = n;
+    }
+  } else if (/\bweekend\b/.test(lower)) {
+    days = 2;
+  }
+
+  // Group
+  let group: TripMeta["group"] | undefined;
+  if (/\bfamily\b|\bkids?\b|\bchildren\b/.test(lower)) {
+    group = "family";
+  } else if (
+    /\bcouple\b|\bpartner\b|\bgirlfriend\b|\bboyfriend\b/.test(lower)
+  ) {
+    group = "couple";
+  } else if (/\bfriends?\b|\bbuddies\b/.test(lower)) {
+    group = "friends";
+  } else if (/\bsolo\b|\balone\b/.test(lower)) {
+    group = "solo";
+  } else if (/\bgroup\b/.test(lower)) {
+    group = "group";
+  }
+
+  // Budget
+  let budget: TripMeta["budget"] = "unknown";
+  if (/\blow budget\b|\bcheap\b|\bstudent\b|\bbudget\b/.test(lower)) {
+    budget = "€";
+  } else if (/\bmid[-\s]?range\b|\bmedium budget\b/.test(lower)) {
+    budget = "€€";
+  } else if (
+    /\bhigh[-\s]?end\b|\bluxury\b|\b5\s*star\b|\bexpensive\b/.test(lower)
+  ) {
+    budget = "€€€";
+  }
+
+  // Vibes
+  const vibes: string[] = [];
+  const addVibe = (label: string, regex: RegExp) => {
+    if (regex.test(lower) && !vibes.includes(label)) {
+      vibes.push(label);
+    }
+  };
+
+  addVibe("chill", /\bchill\b|\brelaxed\b|\bcalm\b/);
+  addVibe("foodie", /\bfoodie\b|\bgood food\b|\brestaurants?\b|\bfood\b/);
+  addVibe("nightlife", /\bnightlife\b|\bbars?\b|\bclubs?\b|\bparty\b/);
+  addVibe("culture", /\bmuseums?\b|\bart\b|\bgalleries\b|\bculture\b/);
+  addVibe("outdoors", /\bhiking\b|\btrails?\b|\bmountains?\b|\boutdoors\b/);
+  addVibe("beach", /\bbeach\b|\bcoast\b|\bseaside\b/);
+  addVibe("shopping", /\bshopping\b|\bmalls?\b|\bboutiques?\b/);
+
+  if (!city && !days && !group && budget === "unknown" && vibes.length === 0) {
+    return null;
+  }
+
+  return { city, days, group, budget, vibes };
 }
 
 function parseTravelSections(text: string): TravelSection[] | null {
@@ -271,9 +348,10 @@ export default function ChatPage() {
   const lastUserTrip =
     [...messages].reverse().find((m) => m.role === "user")?.content || "";
 
-  // Derive a clean city hint from the latest user message
+  const tripMeta = lastUserTrip ? parseTripMeta(lastUserTrip) : null;
+
   const cityHint: string | undefined =
-    extractCityFromText(lastUserTrip) ?? undefined;
+    extractCityFromText(lastUserTrip) || undefined;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
@@ -435,6 +513,22 @@ export default function ChatPage() {
             )}
           </div>
 
+          {hasUserMessage && (
+            <p className="mt-1 text-[10px] text-slate-400 leading-relaxed dark:text-slate-500">
+              Activity photos are fetched from{" "}
+              <a
+                href="https://unsplash.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-slate-600 dark:hover:text-slate-300"
+                title="Photos provided by Unsplash"
+              >
+                Unsplash
+              </a>
+              . You can toggle photo credits in the top-right settings.
+            </p>
+          )}
+
           {/* Input */}
           <form
             onSubmit={handleSubmit}
@@ -473,13 +567,38 @@ export default function ChatPage() {
             <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
               Trip context
             </p>
-
             <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
               {hasUserMessage ? "Current trip" : "No trip set yet"}
             </p>
+            {/* Structured trip summary */}
+            {hasUserMessage && tripMeta && (
+              <div className="mt-2 space-y-1">
+                <div className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] text-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.15)] dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:shadow-[0_18px_40px_rgba(15,23,42,0.7)]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] text-slate-800 dark:bg-slate-800 dark:text-slate-100">
+                    📍
+                  </span>
+                  <span className="truncate">
+                    {tripMeta.city ?? "Somewhere"}
+                    {tripMeta.days
+                      ? ` · ${tripMeta.days} day${tripMeta.days > 1 ? "s" : ""}`
+                      : ""}
+                    {tripMeta.group ? ` · ${tripMeta.group}` : ""}
+                    {tripMeta.budget && tripMeta.budget !== "unknown"
+                      ? ` · ${tripMeta.budget}`
+                      : ""}
+                  </span>
+                </div>
 
-            {/* Current trip summary chip */}
-            {hasUserMessage && lastUserTrip && (
+                {tripMeta.vibes.length > 0 && (
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Vibe: {tripMeta.vibes.join(", ")}
+                  </p>
+                )}
+              </div>
+            )}
+            /* Fallback: if we have a user message but couldn't parse meta, show
+            raw text */
+            {hasUserMessage && !tripMeta && lastUserTrip && (
               <div className="mt-2 inline-flex max-w-full items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] text-slate-800 shadow-[0_10px_28px_rgba(15,23,42,0.15)] dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:shadow-[0_18px_40px_rgba(15,23,42,0.7)]">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-[10px] text-slate-800 dark:bg-slate-800 dark:text-slate-100">
                   📍
@@ -491,13 +610,11 @@ export default function ChatPage() {
                 </span>
               </div>
             )}
-
             <p className="mt-3 text-[13px] text-slate-600 leading-relaxed dark:text-slate-400">
               {hasUserMessage
                 ? "You can now ask to make it calmer, fancier, cheaper, or swap neighborhoods and I’ll reshape it."
                 : "Start with a simple description: city, dates, who you’re with and the kind of weekend you’re hoping for."}
             </p>
-
             <ul className="mt-3 space-y-1.5 text-[12px] text-slate-700 leading-relaxed dark:text-slate-300">
               <li>• City or area</li>
               <li>• Dates or rough timing</li>
