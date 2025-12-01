@@ -152,12 +152,22 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-4 text-[11px] text-slate-500 dark:text-slate-400">
-              <span className="inline-flex items-center gap-1">
+            <div className="mt-6 flex flex-wrap gap-2 text-[11px]">
+              {/* Badge 1 */}
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-slate-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                Live beta · Limited early access
+                Private · No account needed
               </span>
-              <span>Built for spontaneous weekends and slow travel.</span>
+
+              {/* Badge 2 */}
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-slate-300">
+                ⚡ Fast · Itineraries in seconds
+              </span>
+
+              {/* Badge 3 */}
+              <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-slate-300">
+                🌍 100+ trips generated
+              </span>
             </div>
           </section>
 
