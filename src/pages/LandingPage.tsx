@@ -156,7 +156,7 @@ export default function LandingPage() {
               {/* Badge 1 */}
               <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-slate-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                Private · No account needed
+                Private · No sign-up required
               </span>
 
               {/* Badge 2 */}

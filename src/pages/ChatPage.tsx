@@ -279,6 +279,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [showAttribution, setShowAttribution] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -352,6 +353,42 @@ export default function ChatPage() {
 
   const cityHint: string | undefined =
     extractCityFromText(lastUserTrip) || undefined;
+
+  const hasAssistantMessage = messages.some((m) => m.role === "assistant");
+
+  const handleCopyItinerary = async () => {
+    const lastAssistant = [...messages]
+      .reverse()
+      .find((m) => m.role === "assistant");
+
+    const textToCopy = lastAssistant?.content?.trim();
+    if (!textToCopy) return;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(textToCopy);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = textToCopy;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          document.execCommand("copy");
+        } catch {
+          // ignore
+        }
+        document.body.removeChild(textarea);
+      }
+
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch (err) {
+      console.error("Copy itinerary failed:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
@@ -511,6 +548,26 @@ export default function ChatPage() {
             {errorText && (
               <p className="text-[11px] text-red-400">{errorText}</p>
             )}
+
+            {/* Itinerary actions */}
+            {hasAssistantMessage && (
+              <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
+                <button
+                  type="button"
+                  onClick={handleCopyItinerary}
+                  className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:border-sky-400 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-sky-400 dark:hover:text-sky-100"
+                >
+                  <span>⧉</span>
+                  <span>Copy itinerary</span>
+                </button>
+
+                {copied && (
+                  <span className="text-[10px] text-emerald-400">
+                    Copied to clipboard
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {hasUserMessage && (
@@ -651,7 +708,7 @@ export default function ChatPage() {
                     "Family trip to Lisbon, 3 days, kids 7 and 10, calm but fun, want walks and easy food."
                   )
                 }
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-[13px] text-slate-800 leading-relaxed hover:border-sky-400/70 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-sky-400/70 dark:hover:text-sky-100 dark:hover:bg-slate-900"
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-[13px] text-slate-800 leading-relaxed hover;border-sky-400/70 hover:text-sky-900 hover:bg-white transition-colors dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-sky-400/70 dark:hover:text-sky-100 dark:hover:bg-slate-900"
               >
                 “Family trip to Lisbon, 3 days, kids 7 and 10, calm but fun.”
               </button>
