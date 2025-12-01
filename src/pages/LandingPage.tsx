@@ -2,129 +2,6 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "../theme";
 
-function HeroValuePropsAndMockup() {
-  return (
-    <section className="mx-auto flex max-w-5xl flex-col gap-10 px-4 pt-10 pb-12 sm:px-6 lg:flex-row lg:items-center lg:gap-12 lg:pt-14 lg:pb-16">
-      {/* LEFT – Text + value props */}
-      <div className="flex-1 space-y-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-500">
-          Weekend & city-break planner
-        </p>
-
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-[2.2rem] sm:leading-tight dark:text-slate-50">
-          Your smart weekend concierge.
-        </h1>
-
-        <p className="max-w-xl text-[14px] leading-relaxed text-slate-600 dark:text-slate-300">
-          WonderFlow turns a simple message into a calm, realistic itinerary:
-          neighborhoods, stays, food, and activities matched to your mood and
-          budget.
-        </p>
-
-        {/* Value props */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-[13px] shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
-            <p className="font-semibold text-slate-900 dark:text-slate-50">
-              What it does
-            </p>
-            <p className="mt-1 text-slate-600 dark:text-slate-300">
-              One place to choose a city, share your mood, and get a
-              ready-to-use plan.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-[13px] shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
-            <p className="font-semibold text-slate-900 dark:text-slate-50">
-              Why it’s different
-            </p>
-            <p className="mt-1 text-slate-600 dark:text-slate-300">
-              Feels like a hotel concierge: concrete places, realistic timings,
-              no fluff.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-[13px] shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
-            <p className="font-semibold text-slate-900 dark:text-slate-50">
-              Why it’s fast
-            </p>
-            <p className="mt-1 text-slate-600 dark:text-slate-300">
-              Share one message, get a full itinerary in seconds, ready to tweak
-              or share.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* RIGHT – Visual mockup */}
-      <div className="flex-1">
-        <div className="relative mx-auto max-w-sm rounded-3xl border border-slate-200 bg-white/95 p-3 shadow-[0_26px_80px_rgba(15,23,42,0.30)] dark:border-slate-800 dark:bg-[#050816]/95 dark:shadow-[0_30px_90px_rgba(15,23,42,0.95)]">
-          {/* Fake window header */}
-          <div className="mb-3 flex items-center justify-between">
-            <div className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-400/90" />
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-300/90" />
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90" />
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              WonderFlow · Preview
-            </p>
-          </div>
-
-          {/* Chat preview */}
-          <div className="space-y-2.5 text-[11px]">
-            <div className="flex justify-start">
-              <div className="max-w-[80%] rounded-2xl bg-slate-100 px-3 py-2 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
-                Hi, I’m your concierge. Tell me where you’re going and the mood
-                you’re in.
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <div className="max-w-[80%] rounded-2xl bg-[#F5EDE0] px-3 py-2 text-slate-900 border border-[#E4D6C1]">
-                Weekend in Barcelona, calm days, great food, low-stress vibes.
-              </div>
-            </div>
-          </div>
-
-          {/* Mini itinerary cards preview */}
-          <div className="mt-3 grid gap-2.5 text-[11px] sm:grid-cols-2">
-            <div className="overflow-hidden rounded-2xl border border-slate-800/70 bg-slate-900/80">
-              <div className="h-16 w-full bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950" />
-              <div className="px-3 py-2.5">
-                <p className="text-[11px] font-medium text-slate-200">
-                  Gothic Quarter walk
-                </p>
-                <p className="mt-1 text-[10px] text-slate-400">
-                  Slow morning wander through alleys and plazas. (Morning, free)
-                </p>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-slate-800/70 bg-slate-900/80">
-              <div className="h-16 w-full bg-gradient-to-br from-sky-500/40 via-slate-900 to-slate-950" />
-              <div className="px-3 py-2.5">
-                <p className="text-[11px] font-medium text-slate-200">
-                  Rooftop tapas & sunset
-                </p>
-                <p className="mt-1 text-[10px] text-slate-400">
-                  Easy-share plates and views over the city. (Evening, €€)
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer hint */}
-          <div className="mt-3 flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400">
-            <span>Generated in seconds from one message.</span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-700/70 bg-slate-900/80 px-2 py-0.5">
-              ✨ Live concierge
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function LandingPage() {
   const { theme, toggle } = useTheme();
 
@@ -207,11 +84,8 @@ export default function LandingPage() {
       </header>
       {/* HEADER END */}
 
+      {/* Hero */}
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-14">
-        {/* New hero section with value props + mockup */}
-        <HeroValuePropsAndMockup />
-
-        {/* Existing hero-style grid + category cards */}
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
           {/* Left: copy */}
           <section>
@@ -220,14 +94,14 @@ export default function LandingPage() {
               AI concierge for weekends, trips, and nights out.
             </p>
 
-            <h2 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               <span className="block text-slate-900 dark:text-slate-50">
                 Plan less.
               </span>
               <span className="block text-sky-500 dark:text-sky-300">
                 Enjoy the city more.
               </span>
-            </h2>
+            </h1>
 
             <p className="mt-4 max-w-xl text-sm text-slate-600 sm:text-base dark:text-slate-300">
               WonderFlow is your quiet travel concierge. Tell it who you’re
@@ -235,6 +109,35 @@ export default function LandingPage() {
               suggests stays, picks restaurants and lines up a few things to do.
               One place, one flow, no tab overload.
             </p>
+
+            {/* Value props row */}
+            <div className="mt-6 grid max-w-2xl gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/80 px-3 py-3 text-[13px] shadow-[0_18px_40px_rgba(15,23,42,0.8)]">
+                <p className="font-semibold text-slate-50">What it does</p>
+                <p className="mt-1 text-slate-300">
+                  One place to choose a city, share your mood, and get a
+                  ready-to-use plan.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/80 px-3 py-3 text-[13px] shadow-[0_18px_40px_rgba(15,23,42,0.8)]">
+                <p className="font-semibold text-slate-50">
+                  Why it’s different
+                </p>
+                <p className="mt-1 text-slate-300">
+                  Feels like a hotel concierge: concrete places, realistic
+                  timings, no fluff.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-700/80 bg-slate-900/80 px-3 py-3 text-[13px] shadow-[0_18px_40px_rgba(15,23,42,0.8)]">
+                <p className="font-semibold text-slate-50">Why it’s fast</p>
+                <p className="mt-1 text-slate-300">
+                  Share one message, get a full itinerary in seconds, ready to
+                  tweak or share.
+                </p>
+              </div>
+            </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
@@ -258,7 +161,7 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* Right: category cards */}
+          {/* Right: category cards + how it works */}
           <section className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-3">
               {/* Destinations */}
@@ -319,43 +222,60 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* “How it feels to use” teaser */}
-            <div className="grid gap-3 sm:grid-cols-3 text-[12px] text-slate-800 dark:text-slate-300">
-              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  Step 1
-                </p>
-                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
-                  Tell WanderFlow how you feel.
-                </p>
-                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
-                  Share mood, budget, and who you’re traveling with. No forms,
-                  just a simple conversation.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  Step 2
-                </p>
-                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
-                  Get a curated itinerary in seconds.
-                </p>
-                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
-                  Your concierge suggests stays, dining, and experiences that
-                  actually fit your trip.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:shadow-none">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  Step 3
-                </p>
-                <p className="mt-1 font-medium text-slate-900 dark:text-slate-50">
-                  Book everything in one place.
-                </p>
-                <p className="mt-1 text-[12px] text-slate-700 dark:text-slate-300">
-                  Adjust, swap options, and confirm — without juggling six
-                  different apps and tabs.
-                </p>
+            {/* How it works — clean steps */}
+            <div className="mt-6 space-y-4">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                How it works
+              </h2>
+
+              <div className="grid gap-4 md:grid-cols-3">
+                {/* Step 1 */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400 text-xs font-semibold">
+                    1
+                  </span>
+                  <div>
+                    <p className="text-[13px] font-medium text-slate-900 dark:text-slate-50">
+                      Tell WanderFlow how you feel.
+                    </p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+                      Share mood, budget, and who you&apos;re traveling with
+                      just like chatting with a concierge.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 text-xs font-semibold">
+                    2
+                  </span>
+                  <div>
+                    <p className="text-[13px] font-medium text-slate-900 dark:text-slate-50">
+                      Get a curated itinerary in seconds.
+                    </p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+                      Stays, neighborhoods, food, and experiences matched to
+                      your vibe not generic lists.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-start gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-amber-500/15 text-amber-400 text-xs font-semibold">
+                    3
+                  </span>
+                  <div>
+                    <p className="text-[13px] font-medium text-slate-900 dark:text-slate-50">
+                      Book or tweak everything in one flow.
+                    </p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+                      Swap options, adjust the vibe and confirm plans without
+                      juggling six different apps or tabs.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
